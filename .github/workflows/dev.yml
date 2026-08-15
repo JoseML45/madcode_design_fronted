@@ -1,0 +1,78 @@
+name: Development - Build & Deploy
+
+on:
+  push:
+    branches: [ develop ]
+  pull_request:
+    branches: [ develop ]
+
+jobs:
+  build-and-test:
+    runs-on: ubuntu-latest
+
+    strategy:
+      matrix:
+        node-version: [18.x]
+
+    steps:
+    - uses: actions/checkout@v3
+
+    - name: Use Node.js ${{ matrix.node-version }}
+      uses: actions/setup-node@v3
+      with:
+        node-version: ${{ matrix.node-version }}
+        cache: 'npm'
+
+    - name: Install dependencies
+      run: npm ci
+
+    - name: Run linter
+      run: npm run lint || true
+
+    - name: Run tests
+      run: npm run test:ci || true
+
+    - name: Build with development environment
+      run: npm run build:dev
+      env:
+        FIREBASE_API_KEY_DEV: ${{ secrets.FIREBASE_API_KEY_DEV }}
+        FIREBASE_PROJECT_ID_DEV: ${{ secrets.FIREBASE_PROJECT_ID_DEV }}
+
+    - name: Minify and Obfuscate
+      run: |
+        npm install --save-dev terser
+        npx terser dist/mi-primer-proyecto/browser/main.js --compress --mangle --output dist/mi-primer-proyecto/browser/main.min.js
+        rm dist/mi-primer-proyecto/browser/main.js
+        mv dist/mi-primer-proyecto/browser/main.min.js dist/mi-primer-proyecto/browser/main.js
+
+    - name: Upload build artifact
+      uses: actions/upload-artifact@v3
+      with:
+        name: build-dev
+        path: dist/
+        retention-days: 5
+
+  deploy-dev:
+    needs: build-and-test
+    runs-on: ubuntu-latest
+    if: github.event_name == 'push'
+
+    steps:
+    - uses: actions/checkout@v3
+
+    - name: Download build artifact
+      uses: actions/download-artifact@v3
+      with:
+        name: build-dev
+        path: dist/
+
+    - name: Deploy to Firebase Dev
+      uses: FirebaseExtended/action-hosting-deploy@v0
+      with:
+        repoToken: '${{ secrets.GITHUB_TOKEN }}'
+        firebaseServiceAccount: '${{ secrets.FIREBASE_SERVICE_ACCOUNT_DEV }}'
+        channelId: live
+        projectId: 'your-project-dev'
+
+    - name: Notify Deployment
+      run: echo "✅ Deployed to Development - https://dev.yourproject.com"

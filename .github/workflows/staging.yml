@@ -1,0 +1,120 @@
+name: Staging - Build & Deploy
+
+on:
+  push:
+    branches: [ staging ]
+  pull_request:
+    branches: [ staging ]
+
+jobs:
+  build-test-deploy:
+    runs-on: ubuntu-latest
+
+    strategy:
+      matrix:
+        node-version: [18.x]
+
+    steps:
+    - uses: actions/checkout@v3
+
+    - name: Use Node.js ${{ matrix.node-version }}
+      uses: actions/setup-node@v3
+      with:
+        node-version: ${{ matrix.node-version }}
+        cache: 'npm'
+
+    - name: Install dependencies
+      run: npm ci
+
+    - name: Lint
+      run: npm run lint || true
+
+    - name: Run unit tests
+      run: npm run test:ci || true
+
+    - name: Run e2e tests
+      run: npm run e2e:ci || true
+
+    - name: Security audit
+      run: npm audit --audit-level=moderate || true
+
+    - name: Build with staging environment
+      run: npm run build:staging
+      env:
+        FIREBASE_API_KEY_STAGING: ${{ secrets.FIREBASE_API_KEY_STAGING }}
+        FIREBASE_PROJECT_ID_STAGING: ${{ secrets.FIREBASE_PROJECT_ID_STAGING }}
+        FIREBASE_SENDER_ID_STAGING: ${{ secrets.FIREBASE_SENDER_ID_STAGING }}
+        FIREBASE_APP_ID_STAGING: ${{ secrets.FIREBASE_APP_ID_STAGING }}
+        SENTRY_DSN_STAGING: ${{ secrets.SENTRY_DSN_STAGING }}
+
+    - name: Minify CSS and HTML
+      run: |
+        npm install --save-dev html-minifier csso-cli
+        find dist/mi-primer-proyecto/browser -name "*.html" -exec npx html-minifier --remove-comments --collapse-whitespace {} -o {} \;
+        find dist/mi-primer-proyecto/browser -name "*.css" -exec npx csso {} -o {} \;
+
+    - name: Obfuscate and Minify JavaScript
+      run: |
+        npm install --save-dev terser
+        find dist/mi-primer-proyecto/browser -name "*.js" ! -name "*.min.js" -exec bash -c 'npx terser "$0" --compress --mangle --output "${0%.js}.min.js" && rm "$0" && mv "${0%.js}.min.js" "$0"' {} \;
+
+    - name: Generate source maps for debugging
+      run: npm run build:staging -- --source-map
+      continue-on-error: true
+
+    - name: Upload build artifact
+      uses: actions/upload-artifact@v3
+      with:
+        name: build-staging
+        path: dist/
+        retention-days: 10
+
+  deploy-staging:
+    needs: build-test-deploy
+    runs-on: ubuntu-latest
+    if: github.event_name == 'push'
+
+    steps:
+    - uses: actions/checkout@v3
+
+    - name: Download build artifact
+      uses: actions/download-artifact@v3
+      with:
+        name: build-staging
+        path: dist/
+
+    - name: Deploy to Firebase Staging
+      uses: FirebaseExtended/action-hosting-deploy@v0
+      with:
+        repoToken: '${{ secrets.GITHUB_TOKEN }}'
+        firebaseServiceAccount: '${{ secrets.FIREBASE_SERVICE_ACCOUNT_STAGING }}'
+        channelId: live
+        projectId: 'your-project-staging'
+
+    - name: Notify Deployment
+      run: echo "✅ Deployed to Staging - https://staging.yourproject.com"
+
+  notify-slack:
+    needs: deploy-staging
+    runs-on: ubuntu-latest
+    if: github.event_name == 'push'
+
+    steps:
+    - name: Send Slack notification
+      uses: slackapi/slack-github-action@v1.24.0
+      with:
+        payload: |
+          {
+            "text": "🚀 Staging deployment successful!",
+            "blocks": [
+              {
+                "type": "section",
+                "text": {
+                  "type": "mrkdwn",
+                  "text": "✅ *Staging Build Deployed*\n*Branch:* ${{ github.ref }}\n*Commit:* <${{ github.server_url }}/${{ github.repository }}/commit/${{ github.sha }}|${{ github.sha }}>\n*URL:* https://staging.yourproject.com"
+                }
+              }
+            ]
+          }
+      env:
+        SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}

@@ -1,0 +1,31 @@
+{
+  "projects": {
+    "development": "your-project-dev",
+    "staging": "your-project-staging",
+    "production": "your-project-prod"
+  },
+  "targets": {
+    "your-project-dev": {
+      "hosting": {
+        "mi-primer-proyecto": [
+          "mi-primer-proyecto-dev"
+        ]
+      }
+    },
+    "your-project-staging": {
+      "hosting": {
+        "mi-primer-proyecto": [
+          "mi-primer-proyecto-staging"
+        ]
+      }
+    },
+    "your-project-prod": {
+      "hosting": {
+        "mi-primer-proyecto": [
+          "mi-primer-proyecto-prod"
+        ]
+      }
+    }
+  },
+  "etags": {}
+}
