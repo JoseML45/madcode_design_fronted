@@ -1,0 +1,10 @@
+<div class="testimonial-card">
+  <div class="rating">
+    <span *ngFor="let i of [1,2,3,4,5]" class="star" [class.filled]="i <= rating">★</span>
+  </div>
+  <p class="quote">"{{ quote }}"</p>
+  <div class="author-info">
+    <h4 class="author">{{ author }}</h4>
+    <p class="role">{{ role }} <span class="company">@ {{ company }}</span></p>
+  </div>
+</div>

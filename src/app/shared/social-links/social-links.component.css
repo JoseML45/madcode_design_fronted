@@ -1,0 +1,35 @@
+.social-links {
+  display: flex;
+  gap: 1.5rem;
+  align-items: center;
+  justify-content: center;
+  flex-wrap: wrap;
+}
+
+.social-link {
+  width: 2.5rem;
+  height: 2.5rem;
+  border-radius: 50%;
+  border: 2px solid var(--text-secondary);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-decoration: none;
+  color: var(--text-secondary);
+  transition: all 0.3s ease;
+  font-weight: bold;
+  font-size: 0.9rem;
+}
+
+.social-link:hover {
+  border-color: var(--accent-cyan);
+  color: var(--accent-cyan);
+  background-color: rgba(59, 209, 214, 0.1);
+  transform: translateY(-3px);
+}
+
+.icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}

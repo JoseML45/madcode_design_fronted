@@ -1,0 +1,65 @@
+/* VARIABLES GLOBALES */
+:root,
+:host {
+  --bg-dark: #1e2029;
+  --text-primary: #ffffff;
+  --text-secondary: #7f8897;
+  --accent-cyan: #3bd1d6;
+  --btn-green: #30b634;
+  --btn-green-hover: #289a2c;
+  --placeholder-bg: #325862;
+  --border-btn: #383c4a;
+  --font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+}
+
+/* RESET GLOBAL */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  background-color: var(--bg-dark);
+  color: var(--text-primary);
+  font-family: var(--font-family);
+  margin: 0;
+  padding: 0;
+  width: 100%;
+}
+
+:host {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+  background-color: var(--bg-dark);
+  width: 100%;
+}
+
+main {
+  flex: 1;
+  width: 100%;
+  background-color: var(--bg-dark);
+}
+
+/* Scroll bar styling */
+::-webkit-scrollbar {
+  width: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: rgba(59, 209, 214, 0.05);
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--accent-cyan);
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--btn-green);
+}

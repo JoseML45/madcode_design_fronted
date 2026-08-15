@@ -1,0 +1,32 @@
+<footer class="footer">
+  <div class="container">
+    <div class="footer-content">
+      <div class="footer-section">
+        <h3>Mi Portafolio</h3>
+        <p>Diseñador UX/UI especializado en crear experiencias digitales que generan impacto.</p>
+      </div>
+
+      <div class="footer-section">
+        <h4>Enlaces Rápidos</h4>
+        <nav class="footer-nav">
+          <a *ngFor="let link of links" [href]="link.href">{{ link.label }}</a>
+        </nav>
+      </div>
+
+      <div class="footer-section">
+        <h4>Contacto</h4>
+        <div class="contact-info">
+          <a href="mailto:jlozanoportillo@yahoo.com">jlozanoportillo@yahoo.com</a>
+          <a href="tel:+51928884408">+51 928 884 408</a>
+        </div>
+      </div>
+    </div>
+
+    <div class="footer-bottom">
+      <div class="social-container">
+        <app-social-links [links]="socialLinks"></app-social-links>
+      </div>
+      <p class="copyright">&copy; {{ currentYear }} Mi Portafolio. Diseño y desarrollo con ❤️</p>
+    </div>
+  </div>
+</footer>

@@ -1,0 +1,82 @@
+.about-me {
+  padding: 4rem 2rem;
+  background-color: var(--bg-ground);
+  color: var(--text-primary);
+}
+
+.container {
+  max-width: 900px;
+  margin: 0 auto;
+}
+
+.about-content {
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+}
+
+.about-text h2 {
+  font-size: 2.5rem;
+  font-weight: 800;
+  margin-bottom: 1.5rem;
+  background: linear-gradient(135deg, var(--accent-web), var(--accent-graphic));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.about-description {
+  font-size: 1.1rem;
+  line-height: 1.8;
+  color: var(--text-secondary);
+  text-align: justify;
+  margin-bottom: 2rem;
+}
+
+.expertise h3 {
+  font-size: 1.5rem;
+  font-weight: 700;
+  margin-bottom: 1rem;
+  color: var(--text-primary);
+}
+
+.expertise-list {
+  list-style: none;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 1rem;
+}
+
+.expertise-list li {
+  padding: 1rem;
+  background-color: var(--bg-surface);
+  border-left: 4px solid var(--accent-web);
+  border-radius: 8px;
+  color: var(--text-secondary);
+  transition: all 0.3s ease;
+}
+
+.expertise-list li:hover {
+  border-left-color: var(--accent-graphic);
+  background-color: var(--surface-hover);
+  transform: translateX(4px);
+}
+
+@media (max-width: 768px) {
+  .about-me {
+    padding: 2rem 1rem;
+  }
+
+  .about-text h2 {
+    font-size: 2rem;
+  }
+
+  .about-description {
+    font-size: 1rem;
+    text-align: left;
+  }
+
+  .expertise-list {
+    grid-template-columns: 1fr;
+  }
+}

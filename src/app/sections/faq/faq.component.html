@@ -1,0 +1,20 @@
+<section class="faq">
+  <div class="container">
+    <div class="section-header">
+      <h2>Preguntas Frecuentes</h2>
+      <p>Resuelve tus dudas sobre mis servicios</p>
+    </div>
+
+    <div class="faq-list">
+      <div *ngFor="let item of faqs; let i = index" class="faq-item" [class.open]="item.open">
+        <button class="faq-question" (click)="toggleFAQ(i)">
+          <span>{{ item.question }}</span>
+          <span class="icon">{{ item.open ? '−' : '+' }}</span>
+        </button>
+        <div *ngIf="item.open" class="faq-answer">
+          <p>{{ item.answer }}</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>

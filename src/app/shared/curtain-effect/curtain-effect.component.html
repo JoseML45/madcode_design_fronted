@@ -1,0 +1,14 @@
+<div class="curtain-effect-container">
+  <div class="curtain-wrapper">
+    <img [src]="imageUrl" [alt]="title" class="curtain-image" loading="lazy" decoding="async" />
+
+    <div class="curtain-overlay" [class.open]="isOpen">
+      <div class="overlay-content">
+        <h3 class="overlay-title">{{ title }}</h3>
+        <button (click)="toggleCurtain()" class="overlay-btn" aria-label="Toggle project details">
+          <span>{{ isOpen ? 'Cerrar' : 'Ver más' }}</span>
+        </button>
+      </div>
+    </div>
+  </div>
+</div>

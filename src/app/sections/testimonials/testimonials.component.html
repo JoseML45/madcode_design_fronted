@@ -1,0 +1,19 @@
+<section class="testimonials">
+  <div class="container">
+    <div class="section-header">
+      <h2>Lo que dicen nuestros clientes</h2>
+      <p>Resultados reales de proyectos de diseño completados</p>
+    </div>
+
+    <div class="testimonials-grid">
+      <app-testimonial-card
+        *ngFor="let testimonial of testimonials"
+        [quote]="testimonial.quote"
+        [author]="testimonial.author"
+        [role]="testimonial.role"
+        [company]="testimonial.company"
+        [rating]="testimonial.rating">
+      </app-testimonial-card>
+    </div>
+  </div>
+</section>
